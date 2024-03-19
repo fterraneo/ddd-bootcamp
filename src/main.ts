@@ -1,13 +1,5 @@
 import express from 'express';
-import mysql from 'mysql2';
-
-// connecting Database
-const connection = mysql.createConnection({
-    host: "localhost",
-    user: "jerry",
-    password: "jerry",
-    database: "ddd_bootcamp",
-});
+import mysql from 'mysql';
 
 const app = express();
 
@@ -16,16 +8,23 @@ app.get('/',(req,res)=>{
     res.send("Hi");
 })
 
-app.listen(5009,()=>{
+app.listen(5009,()=> {
     console.log("Server listening in http://localhost:5009")
 })
 
 app.post("/aircrafts", async (req, res) => {
+    let connection
     try {
+        connection = mysql.createConnection({
+            host: "127.0.0.1",
+            user: "jerry",
+            password: "jerry",
+            database: "ddd_bootcamp",
+        });
         connection.connect();
         const { model, manufacturer } = req.body;
-        await connection.promise().query(
-            `INSERT INTO aircraft (model, manufacturer) VALUES (?, ?)`,
+        connection.query(
+            `INSERT INTO aircrafts (model, manufacturer) VALUES (?, ?)`,
             [model, manufacturer]
         );
         res.status(202).json({
@@ -35,5 +34,7 @@ app.post("/aircrafts", async (req, res) => {
         res.status(500).json({
             message: err,
         });
+    } finally {
+        connection.end();
     }
 });
