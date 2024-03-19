@@ -15,15 +15,17 @@ app.listen(5009,()=> {
 })
 
 app.post("/aircrafts", async (req, res) => {
-    try {
-        const { model, manufacturer } = req.body;
-        database.create(model, manufacturer);
-        res.status(202).json({
-            message: 'Aircraft Created',
-        });
-    } catch (err) {
-        res.status(500).json({
-            message: err,
-        });
-    }
+    const {model, manufacturer} = req.body;
+    database.create(model, manufacturer)
+        .then(() => {
+            res.status(202).json({
+                message: 'Aircraft Created',
+            });
+        })
+        .catch((err) => {
+            console.error("oooooh", err);
+            res.status(500).json({
+                message: err,
+            });
+        })
 });
