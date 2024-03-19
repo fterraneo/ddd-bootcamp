@@ -31,4 +31,16 @@ export class SeatsDatabase {
             throw err;
         }
     }
+
+    async delete(ID: string) {
+        try {
+            await this.pool!
+                .query(`DELETE
+                        FROM seats
+                        where ID = ?`, [ID]);
+        } catch (err) {
+            throw err;
+        }
+
+    }
 }

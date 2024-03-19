@@ -31,4 +31,15 @@ export class AircraftsDatabase {
             throw err;
         }
     }
+
+    async delete(model: string) {
+        try {
+            await this.pool!
+                .query(`DELETE
+                        FROM aircrafts
+                        where model = ?`, [model]);
+        } catch (err) {
+            throw err;
+        }
+    }
 }

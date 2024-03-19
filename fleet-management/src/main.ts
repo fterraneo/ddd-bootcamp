@@ -38,6 +38,18 @@ app.post("/aircrafts", async (req, res) => {
         })
 });
 
+app.delete("/aircrafts/:model", async (req, res) => {
+    aircraftsDatabase.delete(req.params.model)
+        .then(() => {
+            res.status(204).json({});
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err,
+            });
+        })
+});
+
 app.get("/seats", async (req, res) => {
     const results = await seatsDatabase.getAll()
     res.status(200).json(results)
@@ -50,6 +62,18 @@ app.post("/seats", async (req, res) => {
             res.status(202).json({
                 message: 'Seat type Created',
             });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err,
+            });
+        })
+});
+
+app.delete("/seats/:ID", async (req, res) => {
+    seatsDatabase.delete(req.params.ID)
+        .then(() => {
+            res.status(204).json({});
         })
         .catch((err) => {
             res.status(500).json({
