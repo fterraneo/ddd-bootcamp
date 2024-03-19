@@ -4,6 +4,7 @@ import {Database} from "./data-access/Database";
 const app = express();
 
 let database = new Database();
+database.init() // FIXME this promise is not resolved
 
 app.use(express.json());
 app.get('/',(req,res)=>{
@@ -28,7 +29,6 @@ app.post("/aircrafts", async (req, res) => {
             });
         })
         .catch((err) => {
-            console.error("oooooh", err);
             res.status(500).json({
                 message: err,
             });
