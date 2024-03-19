@@ -1,7 +1,9 @@
 import express from 'express';
-import mysql from 'mysql';
+import {Database} from "./data-access/Database";
 
 const app = express();
+
+let database = new Database();
 
 app.use(express.json());
 app.get('/',(req,res)=>{
@@ -13,20 +15,9 @@ app.listen(5009,()=> {
 })
 
 app.post("/aircrafts", async (req, res) => {
-    let connection
     try {
-        connection = mysql.createConnection({
-            host: "127.0.0.1",
-            user: "jerry",
-            password: "jerry",
-            database: "ddd_bootcamp",
-        });
-        connection.connect();
         const { model, manufacturer } = req.body;
-        connection.query(
-            `INSERT INTO aircrafts (model, manufacturer) VALUES (?, ?)`,
-            [model, manufacturer]
-        );
+        database.create(model, manufacturer);
         res.status(202).json({
             message: 'Aircraft Created',
         });
@@ -34,7 +25,5 @@ app.post("/aircrafts", async (req, res) => {
         res.status(500).json({
             message: err,
         });
-    } finally {
-        connection.end();
     }
 });
