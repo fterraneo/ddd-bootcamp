@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-export class Database {
+export class SeatsDatabase {
     pool: mysql.Pool | undefined
 
     async init() {
@@ -12,11 +12,11 @@ export class Database {
         });
     }
 
-    async create(model: string, manufacturer: string) {
+    async create(id: string, type: string) {
         try {
             await this.pool!.query(
-                `INSERT INTO aircrafts (model, manufacturer) VALUES (?, ?)`,
-                [model, manufacturer]
+                `INSERT INTO seats (ID, type) VALUES (?, ?)`,
+                [id, type]
             );
         } catch (err) {
             throw err;
@@ -25,7 +25,7 @@ export class Database {
 
     async getAll() {
         try {
-            const [ results, _] = await this.pool!.query(`SELECT * FROM aircrafts`);
+            const [ results, _] = await this.pool!.query(`SELECT * FROM seats`);
             return results;
         } catch (err) {
             throw err;

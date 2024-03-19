@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Database = void 0;
 const tslib_1 = require("tslib");
 const promise_1 = tslib_1.__importDefault(require("mysql2/promise"));
-class Database {
+class AircraftsDatabase {
     async create(model, manufacturer) {
         let connection;
         try {
@@ -22,5 +22,4 @@ class Database {
         }
     }
 }
-exports.Database = Database;
-//# sourceMappingURL=Database.js.map
+exports.Database = AircraftsDatabase;
