@@ -73,8 +73,8 @@ app.get("/seats", async (req, res) => {
 })
 
 app.post("/seats", async (req, res) => {
-    const {id, type} = req.body;
-    seatsDatabase.create(id, type)
+    const {id, type, width, height, pitch, productionDate, comfortLevel, features} = req.body;
+    seatsDatabase.create(id, type, width, height, pitch, productionDate, comfortLevel, features)
         .then(() => {
             res.status(202).json({
                 message: 'Seat type Created',
@@ -88,10 +88,10 @@ app.post("/seats", async (req, res) => {
 });
 
 app.put("/seats/:ID", async (req, res) => {
-    const {type} = req.body;
+    const {type, width, height, pitch, productionDate, comfortLevel, features} = req.body;
     const id = req.params.ID;
 
-    seatsDatabase.update(id, type)
+    seatsDatabase.update(id, type, width, height, pitch, productionDate, comfortLevel, features)
         .then(() => {
             res.status(200).json({
                 message: 'Seat updated',
