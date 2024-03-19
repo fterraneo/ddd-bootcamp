@@ -15,7 +15,7 @@ export class SeatsDatabase {
     async create(id: string, type: string) {
         try {
             await this.pool!.query(
-                `INSERT INTO seats (ID, type) VALUES (?, ?)`,
+                `INSERT INTO seats (ID, type, version) VALUES (?, ?, 0)`,
                 [id, type]
             );
         } catch (err) {
@@ -41,6 +41,26 @@ export class SeatsDatabase {
         } catch (err) {
             throw err;
         }
+    }
 
+    async update(ID: string, type: string) {
+        try {
+            const [result, _] = await this.pool!
+                .query(`SELECT version
+                        from seats
+                        where ID = ?`, [ID]);
+
+            let version = result[0].version
+
+            await this.pool!
+                .query(`UPDATE
+                            seats
+                        set type = ?,
+                            version = ?
+                        where ID = ?
+                          and version = ?`, [type, version + 1, ID, version]);
+        } catch (err) {
+            throw err;
+        }
     }
 }

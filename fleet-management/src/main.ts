@@ -41,7 +41,7 @@ app.post("/aircrafts", async (req, res) => {
 app.put("/aircrafts/:model", async (req, res) => {
     const {manufacturer} = req.body;
     const model = req.params.model;
-    
+
     aircraftsDatabase.update(model, manufacturer)
         .then(() => {
             res.status(200).json({
@@ -78,6 +78,23 @@ app.post("/seats", async (req, res) => {
         .then(() => {
             res.status(202).json({
                 message: 'Seat type Created',
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err,
+            });
+        })
+});
+
+app.put("/seats/:ID", async (req, res) => {
+    const {type} = req.body;
+    const id = req.params.ID;
+
+    seatsDatabase.update(id, type)
+        .then(() => {
+            res.status(200).json({
+                message: 'Seat updated',
             });
         })
         .catch((err) => {
