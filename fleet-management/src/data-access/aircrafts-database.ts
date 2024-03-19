@@ -42,4 +42,20 @@ export class AircraftsDatabase {
             throw err;
         }
     }
+
+    async update(model: string, manufacturer: string) {
+        try {
+            const [result, _]  = await this.pool!
+                .query(`SELECT version from aircrafts where model = ?`, [model]);
+
+            let version = result[0].version
+
+            await this.pool!
+                .query(`UPDATE
+                        aircrafts set manufacturer = ?, version = ?
+                        where model = ? and version = ?`, [manufacturer, version + 1, model, version]);
+        } catch (err) {
+            throw err;
+        }
+    }
 }

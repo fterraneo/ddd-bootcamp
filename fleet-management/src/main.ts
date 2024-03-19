@@ -38,6 +38,23 @@ app.post("/aircrafts", async (req, res) => {
         })
 });
 
+app.put("/aircrafts/:model", async (req, res) => {
+    const {manufacturer} = req.body;
+    const model = req.params.model;
+    
+    aircraftsDatabase.update(model, manufacturer)
+        .then(() => {
+            res.status(200).json({
+                message: 'Aircraft updated',
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err,
+            });
+        })
+});
+
 app.delete("/aircrafts/:model", async (req, res) => {
     aircraftsDatabase.delete(req.params.model)
         .then(() => {
