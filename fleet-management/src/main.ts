@@ -14,6 +14,11 @@ app.listen(5009,()=> {
     console.log("Server listening in http://localhost:5009")
 })
 
+app.get("/aircrafts", async (req, res) => {
+    const results = await database.getAll()
+    res.status(200).json(results)
+})
+
 app.post("/aircrafts", async (req, res) => {
     const {model, manufacturer} = req.body;
     database.create(model, manufacturer)
