@@ -15,7 +15,7 @@ export class AircraftsDatabase {
     async create(model: string, manufacturer: string) {
         try {
             await this.pool!.query(
-                `INSERT INTO aircrafts (model, manufacturer) VALUES (?, ?)`,
+                `INSERT INTO aircrafts (model, manufacturer, version) VALUES (?, ?, 0)`,
                 [model, manufacturer]
             );
         } catch (err) {
