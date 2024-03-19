@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { Aircraft } from "./aircraft"
 
 export class AircraftsDatabase {
     pool: mysql.Pool | undefined
@@ -14,9 +15,10 @@ export class AircraftsDatabase {
 
     async create(model: string, manufacturer: string) {
         try {
+            const aircraft = new Aircraft(model, manufacturer)
             await this.pool!.query(
-                `INSERT INTO aircrafts (model, manufacturer, version) VALUES (?, ?, 0)`,
-                [model, manufacturer]
+                `INSERT INTO aircrafts (model, snapshot, version) VALUES (?, ?, 0)`,
+                [aircraft.model, JSON.stringify(aircraft.toSnapshot())]
             );
         } catch (err) {
             throw err;
@@ -25,7 +27,7 @@ export class AircraftsDatabase {
 
     async getAll() {
         try {
-            const [ results, _] = await this.pool!.query(`SELECT * FROM aircrafts`);
+            const [ results, _] = await this.pool!.query(`SELECT snapshot FROM aircrafts`);
             return results;
         } catch (err) {
             throw err;
@@ -45,15 +47,16 @@ export class AircraftsDatabase {
 
     async update(model: string, manufacturer: string) {
         try {
+            const aircraft = new Aircraft(model, manufacturer)
             const [result, _]  = await this.pool!
-                .query(`SELECT version from aircrafts where model = ?`, [model]);
+                .query(`SELECT version from aircrafts where model = ?`, [aircraft.model]);
 
             let version = result[0].version
 
             await this.pool!
                 .query(`UPDATE
-                        aircrafts set manufacturer = ?, version = ?
-                        where model = ? and version = ?`, [manufacturer, version + 1, model, version]);
+                        aircrafts set snapshot = ?, version = ?
+                        where model = ? and version = ?`, [JSON.stringify(aircraft.toSnapshot()), version + 1, aircraft.model, version]);
         } catch (err) {
             throw err;
         }

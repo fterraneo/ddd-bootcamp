@@ -5,7 +5,9 @@
   "engines": {
     "node": ">=16 <19"
   },
-  "workspaces": ["fleet-management"],
+  "workspaces": [
+    "fleet-management"
+  ],
   "author": "",
   "license": "ISC"
 }
