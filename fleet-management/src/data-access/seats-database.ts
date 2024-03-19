@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { Seat } from "./seat"
 
 export class SeatsDatabase {
     pool: mysql.Pool | undefined
@@ -14,9 +15,10 @@ export class SeatsDatabase {
 
     async create(id: string, type: string) {
         try {
+            const seat = new Seat(id, type)
             await this.pool!.query(
-                `INSERT INTO seats (ID, type, version) VALUES (?, ?, 0)`,
-                [id, type]
+                `INSERT INTO seats (ID, snapshot, version) VALUES (?, ?, 0)`,
+                [id, JSON.stringify(seat.toSnapshot())]
             );
         } catch (err) {
             throw err;
@@ -25,7 +27,7 @@ export class SeatsDatabase {
 
     async getAll() {
         try {
-            const [ results, _] = await this.pool!.query(`SELECT * FROM seats`);
+            const [ results, _] = await this.pool!.query(`SELECT snapshot FROM seats`);
             return results;
         } catch (err) {
             throw err;
@@ -45,6 +47,7 @@ export class SeatsDatabase {
 
     async update(ID: string, type: string) {
         try {
+            const seat = new Seat(ID, type)
             const [result, _] = await this.pool!
                 .query(`SELECT version
                         from seats
@@ -55,10 +58,10 @@ export class SeatsDatabase {
             await this.pool!
                 .query(`UPDATE
                             seats
-                        set type = ?,
+                        set snapshot = ?,
                             version = ?
                         where ID = ?
-                          and version = ?`, [type, version + 1, ID, version]);
+                          and version = ?`, [JSON.stringify(seat.toSnapshot()), version + 1, ID, version]);
         } catch (err) {
             throw err;
         }
