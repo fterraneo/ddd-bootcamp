@@ -13,9 +13,9 @@ export class AircraftsDatabase {
         });
     }
 
-    async create(model: string, manufacturer: string) {
+    async create(model: string, manufacturer: string, wingspan: string, cabinWidth: string, cabinHeight: string, cabinLength: string, cargoCapacity: string, range: string, cruiseSpeed: string, engineType: string, noiseLevel: string) {
         try {
-            const aircraft = new Aircraft(model, manufacturer)
+            const aircraft = new Aircraft(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
             await this.pool!.query(
                 `INSERT INTO aircrafts (model, snapshot, version) VALUES (?, ?, 0)`,
                 [aircraft.model, JSON.stringify(aircraft.toSnapshot())]
@@ -45,9 +45,9 @@ export class AircraftsDatabase {
         }
     }
 
-    async update(model: string, manufacturer: string) {
+    async update(model: string, manufacturer: string, wingspan: string, cabinWidth: string, cabinHeight: string, cabinLength: string, cargoCapacity: string, range: string, cruiseSpeed: string, engineType: string, noiseLevel: string) {
         try {
-            const aircraft = new Aircraft(model, manufacturer)
+            const aircraft = new Aircraft(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
             const [result, _]  = await this.pool!
                 .query(`SELECT version from aircrafts where model = ?`, [aircraft.model]);
 

@@ -24,8 +24,8 @@ app.get("/aircrafts", async (req, res) => {
 })
 
 app.post("/aircrafts", async (req, res) => {
-    const {model, manufacturer} = req.body;
-    aircraftsDatabase.create(model, manufacturer)
+    const {model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel} = req.body;
+    aircraftsDatabase.create(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
         .then(() => {
             res.status(202).json({
                 message: 'Aircraft Created',
@@ -39,10 +39,10 @@ app.post("/aircrafts", async (req, res) => {
 });
 
 app.put("/aircrafts/:model", async (req, res) => {
-    const {manufacturer} = req.body;
+    const {manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel} = req.body;
     const model = req.params.model;
 
-    aircraftsDatabase.update(model, manufacturer)
+    aircraftsDatabase.update(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
         .then(() => {
             res.status(200).json({
                 message: 'Aircraft updated',
