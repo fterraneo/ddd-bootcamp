@@ -1,6 +1,7 @@
 import express from 'express';
 import {AircraftsDatabase} from "./data-access/aircrafts-database";
 import {SeatTypesDatabase} from "./data-access/seat-types-database";
+import {CabinLayoutDatabase} from "./data-access/cabin-layout-database";
 
 const app = express();
 
@@ -8,6 +9,8 @@ let aircraftsDatabase = new AircraftsDatabase();
 aircraftsDatabase.init() // FIXME this promise is not resolved
 let seatTypesDatabase = new SeatTypesDatabase();
 seatTypesDatabase.init() // FIXME this promise is not resolved
+let layoutsDatabase = new CabinLayoutDatabase();
+layoutsDatabase.init() // FIXME this promise is not resolved
 
 app.use(express.json());
 app.get('/',(req,res)=>{
@@ -108,6 +111,26 @@ app.delete("/seat-types/:ID", async (req, res) => {
     seatTypesDatabase.delete(req.params.ID)
         .then(() => {
             res.status(204).json({});
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err,
+            });
+        })
+});
+
+app.get("/cabin-layouts/:ID", async (req, res) => {
+    const results = await layoutsDatabase.get(req.params.ID)
+    res.status(200).json(results)
+})
+
+app.post("/cabin-layouts", async (req, res) => {
+    const {id, width, length} = req.body;
+    layoutsDatabase.create(id, width, length)
+        .then(() => {
+            res.status(202).json({
+                message: 'Cabin Layout Created',
+            });
         })
         .catch((err) => {
             res.status(500).json({
