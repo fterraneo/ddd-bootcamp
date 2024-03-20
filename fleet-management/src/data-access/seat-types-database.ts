@@ -66,4 +66,15 @@ export class SeatTypesDatabase {
             throw err;
         }
     }
+
+    async get(seattype: string) {
+        try {
+            const [results, _] = await this.pool!.query(`SELECT snapshot
+                                                         FROM seattypes
+                                                         WHERE ID = ?`, seattype);
+            return results[0];
+        } catch (err) {
+            throw err;
+        }
+    }
 }

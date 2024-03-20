@@ -19,4 +19,8 @@ export class CabinRow {
             seatmap: this.seatmap
         }
     }
+
+    isFittingWidth(seatWidth: number, layoutWidth: number): boolean {
+        return this.seatmap.reduce((acc, v) => acc + v, 0) * seatWidth <= layoutWidth
+    }
 }

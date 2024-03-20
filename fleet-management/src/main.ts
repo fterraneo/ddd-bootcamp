@@ -3,6 +3,7 @@ import {AircraftsDatabase} from "./data-access/aircrafts-database";
 import {SeatTypesDatabase} from "./data-access/seat-types-database";
 import {CabinLayoutDatabase} from "./data-access/cabin-layout-database";
 import {CabinRowstDatabase} from "./data-access/cabin-rows-database";
+import {CreateRowForCabinLayoutService} from "./application/create-row-for-cabin-layout-service";
 
 const app = express();
 
@@ -14,6 +15,7 @@ let layoutsDatabase = new CabinLayoutDatabase();
 layoutsDatabase.init() // FIXME this promise is not resolved
 let rowsDatabase = new CabinRowstDatabase();
 rowsDatabase.init() // FIXME this promise is not resolved
+let createRowForCabinLayoutService = new CreateRowForCabinLayoutService(seatTypesDatabase, layoutsDatabase, rowsDatabase);
 
 app.use(express.json());
 app.get('/',(req,res)=>{
@@ -150,7 +152,7 @@ app.get("/cabin-rows/layout/:id", async (req, res) => {
 app.post("/cabin-rows/layout/:id", async (req, res) => {
     const {id, seattype, extraspace, seatmap} = req.body;
     const cabinlayoutid = req.params.id
-    rowsDatabase.create(id, cabinlayoutid, seattype, extraspace, seatmap)
+    createRowForCabinLayoutService.create(id, cabinlayoutid, seattype, extraspace, seatmap)
         .then(() => {
             res.status(202).json({
                 message: 'Cabin row Created',
@@ -158,7 +160,7 @@ app.post("/cabin-rows/layout/:id", async (req, res) => {
         })
         .catch((err) => {
             res.status(500).json({
-                message: err,
+                message: err.message,
             });
         })
 });
