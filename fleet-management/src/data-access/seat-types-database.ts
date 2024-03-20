@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
-import { Seat } from "./seat"
+import { SeatType } from "./seat-type"
 
-export class SeatsDatabase {
+export class SeatTypesDatabase {
     pool: mysql.Pool | undefined
 
     async init() {
@@ -13,11 +13,11 @@ export class SeatsDatabase {
         });
     }
 
-    async create(id: string, type: string, width: string, height: string, pitch: string, productionDate: string, comfortLevel: string, features: string) {
+    async create(id: string, type: string, width: number, height: number, pitch: number, weight: number, productionDate: number, comfortLevel: number, features: string) {
         try {
-            const seat = new Seat(id, type, width, height, pitch, productionDate, comfortLevel, features)
+            const seat = new SeatType(id, type, width, height, pitch, weight, productionDate, comfortLevel, features)
             await this.pool!.query(
-                `INSERT INTO seats (ID, snapshot, version) VALUES (?, ?, 0)`,
+                `INSERT INTO seattypes (ID, snapshot, version) VALUES (?, ?, 0)`,
                 [id, JSON.stringify(seat.toSnapshot())]
             );
         } catch (err) {
@@ -27,7 +27,7 @@ export class SeatsDatabase {
 
     async getAll() {
         try {
-            const [ results, _] = await this.pool!.query(`SELECT snapshot FROM seats`);
+            const [ results, _] = await this.pool!.query(`SELECT snapshot FROM seattypes`);
             return results;
         } catch (err) {
             throw err;
@@ -38,26 +38,26 @@ export class SeatsDatabase {
         try {
             await this.pool!
                 .query(`DELETE
-                        FROM seats
+                        FROM seattypes
                         where ID = ?`, [ID]);
         } catch (err) {
             throw err;
         }
     }
 
-    async update(ID: string, type: string, width: string, height: string, pitch: string, productionDate: string, comfortLevel: string, features: string) {
+    async update(ID: string, type: string, width: number, height: number, pitch: number, weight: number, productionDate: number, comfortLevel: number, features: string) {
         try {
-            const seat = new Seat(ID, type, width, height, pitch, productionDate, comfortLevel, features)
+            const seat = new SeatType(ID, type, width, height, pitch, weight, productionDate, comfortLevel, features)
             const [result, _] = await this.pool!
                 .query(`SELECT version
-                        from seats
+                        from seattypes
                         where ID = ?`, [ID]);
 
             let version = result[0].version
 
             await this.pool!
                 .query(`UPDATE
-                            seats
+                            seattypes
                         set snapshot = ?,
                             version = ?
                         where ID = ?

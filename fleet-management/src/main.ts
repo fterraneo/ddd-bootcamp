@@ -1,13 +1,13 @@
 import express from 'express';
 import {AircraftsDatabase} from "./data-access/aircrafts-database";
-import {SeatsDatabase} from "./data-access/seats-database";
+import {SeatTypesDatabase} from "./data-access/seat-types-database";
 
 const app = express();
 
 let aircraftsDatabase = new AircraftsDatabase();
 aircraftsDatabase.init() // FIXME this promise is not resolved
-let seatsDatabase = new SeatsDatabase();
-seatsDatabase.init() // FIXME this promise is not resolved
+let seatTypesDatabase = new SeatTypesDatabase();
+seatTypesDatabase.init() // FIXME this promise is not resolved
 
 app.use(express.json());
 app.get('/',(req,res)=>{
@@ -67,17 +67,17 @@ app.delete("/aircrafts/:model", async (req, res) => {
         })
 });
 
-app.get("/seats", async (req, res) => {
-    const results = await seatsDatabase.getAll()
+app.get("/seat-types", async (req, res) => {
+    const results = await seatTypesDatabase.getAll()
     res.status(200).json(results)
 })
 
-app.post("/seats", async (req, res) => {
-    const {id, type, width, height, pitch, productionDate, comfortLevel, features} = req.body;
-    seatsDatabase.create(id, type, width, height, pitch, productionDate, comfortLevel, features)
+app.post("/seat-types", async (req, res) => {
+    const {id, type, width, height, pitch, weight, productionDate, comfortLevel, features} = req.body;
+    seatTypesDatabase.create(id, type, width, height, pitch, weight, productionDate, comfortLevel, features)
         .then(() => {
             res.status(202).json({
-                message: 'Seat type Created',
+                message: 'SeatType type Created',
             });
         })
         .catch((err) => {
@@ -87,14 +87,14 @@ app.post("/seats", async (req, res) => {
         })
 });
 
-app.put("/seats/:ID", async (req, res) => {
-    const {type, width, height, pitch, productionDate, comfortLevel, features} = req.body;
+app.put("/seat-types/:ID", async (req, res) => {
+    const {type, width, height, pitch, weight, productionDate, comfortLevel, features} = req.body;
     const id = req.params.ID;
 
-    seatsDatabase.update(id, type, width, height, pitch, productionDate, comfortLevel, features)
+    seatTypesDatabase.update(id, type, width, height, pitch, weight, productionDate, comfortLevel, features)
         .then(() => {
             res.status(200).json({
-                message: 'Seat updated',
+                message: 'SeatType updated',
             });
         })
         .catch((err) => {
@@ -104,8 +104,8 @@ app.put("/seats/:ID", async (req, res) => {
         })
 });
 
-app.delete("/seats/:ID", async (req, res) => {
-    seatsDatabase.delete(req.params.ID)
+app.delete("/seat-types/:ID", async (req, res) => {
+    seatTypesDatabase.delete(req.params.ID)
         .then(() => {
             res.status(204).json({});
         })

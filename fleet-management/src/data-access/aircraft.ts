@@ -3,17 +3,17 @@ import e from "express"
 export class Aircraft {
     model: string
     manufacturer: string
-    wingspan: string
-    cabinWidth: string
-    cabinHeight: string
-    cabinLength: string
-    cargoCapacity: string
-    range: string
-    cruiseSpeed: string
+    wingspan: number
+    cabinWidth: number
+    cabinHeight: number
+    cabinLength: number
+    cargoCapacity: number
+    range: number
+    cruiseSpeed: number
     engineType: string
     noiseLevel: string
 
-    constructor(model: string, manufacturer: string, wingspan: string, cabinWidth: string, cabinHeight: string, cabinLength: string, cargoCapacity: string, range: string, cruiseSpeed: string, engineType: string, noiseLevel: string) {
+    constructor(model: string, manufacturer: string, wingspan: number, cabinWidth: number, cabinHeight: number, cabinLength: number, cargoCapacity: number, range: number, cruiseSpeed: number, engineType: string, noiseLevel: string) {
         this.model = model
         this.manufacturer = manufacturer
         this.wingspan = wingspan

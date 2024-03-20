@@ -13,7 +13,7 @@ export class AircraftsDatabase {
         });
     }
 
-    async create(model: string, manufacturer: string, wingspan: string, cabinWidth: string, cabinHeight: string, cabinLength: string, cargoCapacity: string, range: string, cruiseSpeed: string, engineType: string, noiseLevel: string) {
+    async create(model: string, manufacturer: string, wingspan: number, cabinWidth: number, cabinHeight: number, cabinLength: number, cargoCapacity: number, range: number, cruiseSpeed: number, engineType: string, noiseLevel: string) {
         try {
             const aircraft = new Aircraft(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
             await this.pool!.query(
@@ -45,7 +45,7 @@ export class AircraftsDatabase {
         }
     }
 
-    async update(model: string, manufacturer: string, wingspan: string, cabinWidth: string, cabinHeight: string, cabinLength: string, cargoCapacity: string, range: string, cruiseSpeed: string, engineType: string, noiseLevel: string) {
+    async update(model: string, manufacturer: string, wingspan: number, cabinWidth: number, cabinHeight: number, cabinLength: number, cargoCapacity: number, range: number, cruiseSpeed: number, engineType: string, noiseLevel: string) {
         try {
             const aircraft = new Aircraft(model, manufacturer, wingspan, cabinWidth, cabinHeight, cabinLength, cargoCapacity, range, cruiseSpeed, engineType, noiseLevel)
             const [result, _]  = await this.pool!
